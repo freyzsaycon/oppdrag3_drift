@@ -67,4 +67,31 @@ Get-ADUser -Identity "test.user"|Select DistinguishedName
 
 ```
 
+## CSV file to create users
+
+```
+$csvPath = "C:\Users\Administrator\Documents\xxx.csv"
+ 
+
+$users = Import-Csv -Path $csvPath
+foreach ($user in $users) {
+    # Definer brukerkontoegenskapene
+    $firstName = $user.FirstName
+    $lastName = $user.LastName
+    $userName = $user.UserName
+    $password = $user.Password
+    $ou = $user.OU
+
+
+    New-ADUser -GivenName $firstName 
+               -Surname $lastName 
+               -Name "$firstName $lastName" 
+               -SamAccountName $userName 
+               -UserPrincipalname "$userName@example.com" 
+               -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) 
+               -Path $ou 
+               -Enabled $true 
+               -PassThru
+```
+
 
