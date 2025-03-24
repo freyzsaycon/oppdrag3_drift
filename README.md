@@ -1,14 +1,12 @@
-# oppdrag3_drift
+# Powershell commands for Windows Server 🖥️
 
+## Install new roles for Windows Server Manager
 
-## Powershell commands for Windows Server
+```powershell
+# Finds all downloadable features for server
+Get-WindowsFeature 
 
-
-## Install new roles
-
-```
-Get-WindowsFeature
-
+# Install all required features below
 Install-WindowsFeature -name ad-domain-services -IncludeAllSubFeature - IncludeManagementTools
 
 Install-WindowsFeature -name DNS -IncludeAllSubFeature - IncludeManagementTools
@@ -21,18 +19,16 @@ Install-WindowsFeature -name FS-fileserver -IncludeAllSubFeature - IncludeManage
 
 ```
 
-Restart PC
+Restart PC after installation
 
 ## Set new static IP
-```
+```powershell
 New-NetIPAddress -InterfaceIndex <YourInterfaceIndex> -IPAddress <CorrectIPAddress> -PrefixLength 24 -DefaultGateway <YourGateway>
-
 ```
 
+## Add/Configure domain
 
-## Configure domain
-
-```
+```powershell
 Install-ADDSForest -DomainName "name.local" -InstallDNS -Force
 
 New-ADOrganizationUnit -Name "name" -Path "DC=name,DC=local"
@@ -40,10 +36,11 @@ New-ADOrganizationUnit -Name "name" -Path "DC=name,DC=local"
 Get-ADOrganizationalUnit -Filter*|Select Name, DistinguishedName
 
 ```
+Replace all "xxx" and "name", "name.local" with your own values.
 
-## Configure DHCP
+## Add/Configure DHCP
 
-```
+```powershell
 Add-DhcpServerInDC -Dnsname "name.local" -IPAddress xxx.xxx.xxx.xxx
 
 restart-service DHCPServer
@@ -56,7 +53,7 @@ Get-DhcpServerv4Scope
 
 ## Make test account in AD
 
-```
+```powershell
 Redircmp "OU=name, DC=name,DC=name"
 
 Rediusr "OU=name,DC=name,DC=name"
@@ -67,15 +64,14 @@ Get-ADUser -Identity "test.user"|Select DistinguishedName
 
 ```
 
-## CSV file to create users
+## CSV file to create users 
 
-```
+```powershell
 $csvPath = "C:\Users\Administrator\Documents\xxx.csv"
  
 
 $users = Import-Csv -Path $csvPath
 foreach ($user in $users) {
-    # Definer brukerkontoegenskapene
     $firstName = $user.FirstName
     $lastName = $user.LastName
     $userName = $user.UserName
