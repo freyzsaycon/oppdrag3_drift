@@ -7,6 +7,8 @@
 Get-WindowsFeature 
 
 # Install all required features below
+Install-WindowsFeature -name Hyper-V -IncludeAllSubFeature - IncludeManagementTools
+
 Install-WindowsFeature -name ad-domain-services -IncludeAllSubFeature - IncludeManagementTools
 
 Install-WindowsFeature -name DNS -IncludeAllSubFeature - IncludeManagementTools
@@ -24,6 +26,11 @@ Restart PC after installation
 ## Set new static IP
 ```powershell
 New-NetIPAddress -InterfaceIndex <YourInterfaceIndex> -IPAddress <CorrectIPAddress> -PrefixLength 24 -DefaultGateway <YourGateway>
+```
+
+## Hyper-V switch
+```powershell
+New-VMSwitch -Name "VLAN10Switch" -NetAdapterName "Ethernet" -AllowManagementOS $true
 ```
 
 ## Add/Configure domain
@@ -88,6 +95,7 @@ foreach ($user in $users) {
                -Path $ou 
                -Enabled $true 
                -PassThru
+
 ```
 
 
